@@ -12,35 +12,50 @@ enum CallBuilder {
 	
 	REGULAR {
 		@Override
-		boolean condition(LocalDateTime when) {
+		Boolean shouldCount(LocalDateTime when) {
 			return new WorkingDayFilterStrategy().is(when) 
 					&& new RegularMinuteFilterStrategy().is(when);
+		}
+
+		@Override
+		Double tariff() {
+			return 0.05;
 		}
 	},
 	LATE_NIGHT {
 		@Override
-		boolean condition(LocalDateTime when) {
+		Boolean shouldCount(LocalDateTime when) {
 			return new WorkingDayFilterStrategy().is(when) 
 					&& new LateNightMinuteStrategy().is(when);
+		}
+
+		@Override
+		Double tariff() {
+			return 0.02;
 		}
 	},
 	WEEKEND {
 		@Override
-		boolean condition(LocalDateTime when) {			
+		Boolean shouldCount(LocalDateTime when) {			
 			return new WeekendDayStategy().is(when);
+		}
+
+		@Override
+		Double tariff() {
+			return 0.01;
 		}
 
 	};
 	
+	abstract Boolean shouldCount(LocalDateTime when);
+	abstract Double tariff();
 
-	abstract boolean condition(LocalDateTime when);
-
-	Long minutes(LocalDateTime started, LocalDateTime finished) {
+	Long minutes(final LocalDateTime started, final LocalDateTime finished) {
 		LocalDateTime currentMinute = started;
-		LocalDateTime lastMinute = finished;
+		final LocalDateTime lastMinute = finished;
 		AtomicLong minutes = new AtomicLong(0);
 		while (currentMinute.isBefore(lastMinute)) {
-			if(condition(currentMinute)) {
+			if(shouldCount(currentMinute)) {
 				minutes.incrementAndGet();
 			}			
 			currentMinute = currentMinute.plusMinutes(1);

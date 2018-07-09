@@ -1,14 +1,10 @@
 package com.forneus.jpmc.entity;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class Call {
 	
-
 	private LocalDateTime started;
 	private LocalDateTime finished;
 	private Boolean international;
@@ -28,6 +24,30 @@ public class Call {
 	
 	public Long totalMinutes() {
 		return ChronoUnit.MINUTES.between(started, finished);
+	}
+
+	public LocalDateTime getStarted() {
+		return started;
+	}
+
+	public LocalDateTime getFinished() {
+		return finished;
+	}
+
+	public Boolean isInternational() {
+		return international;
+	}
+
+	public Long getLateNightMinutes() {
+		return lateNightMinutes;
+	}
+
+	public Long getWeekendMinutes() {
+		return weekendMinutes;
+	}
+
+	public Long getRegularMinutes() {
+		return regularMinutes;
 	}
 	
 }
